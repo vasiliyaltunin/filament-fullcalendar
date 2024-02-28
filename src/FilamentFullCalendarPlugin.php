@@ -21,6 +21,9 @@ class FilamentFullCalendarPlugin implements Plugin
 
     protected ?bool $selectable = null;
 
+    protected $cellsSource = null;
+
+
     public function getId(): string
     {
         return 'filament-fullcalendar';

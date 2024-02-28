@@ -18,9 +18,12 @@ trait InteractsWithEvents
             $this->record = $this->resolveRecord($event['id']);
         }
 
+        // dd($this->record);
+        //dd($event);
+        
         $this->mountAction('view', [
             'type' => 'click',
-            'event' => $event,
+            'record' => $this->record,
         ]);
     }
 
@@ -79,6 +82,24 @@ trait InteractsWithEvents
 
         return false;
     }
+
+    public function onDateClick(string $id): bool
+    {
+
+        $this->setToCellModel();
+
+        if ($this->isCellModel())
+        {
+            if ($this->getModel()) {
+                $this->record = $this->resolveRecord($id);
+            }
+
+            $this->mountAction('cell');
+        }
+
+        return false;
+    }
+
 
     /**
      * Triggered when a date/time selection is made (single or multiple days).

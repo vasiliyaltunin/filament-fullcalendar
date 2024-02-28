@@ -20,14 +20,28 @@ trait InteractsWithRecords
     #[Locked]
     public Model | int | string | null $record;
 
+    protected $isCellModel = false;
+
     protected static ?string $recordRouteKeyName = null;
+
+    public function setToCellModel(): void {
+        if ($this->cellsModel === null) {
+            $this->isCellModel = false;            
+        } else {
+            $this->isCellModel = true;
+        }
+    }
+
+    public function isCellModel(): bool {
+        return $this->isCellModel;
+    }
 
     protected function resolveRecord(int | string $key): Model
     {
         $record = $this->resolveRecordRouteBinding($key);
 
         if ($record === null) {
-            throw (new ModelNotFoundException())->setModel($this->getModel(), [$key]);
+                throw (new ModelNotFoundException())->setModel($this->getModel(), [$key]);
         }
 
         return $record;
@@ -35,7 +49,11 @@ trait InteractsWithRecords
 
     public function getModel(): ?string
     {
-        $model = $this->model;
+        if ($this->isCellModel) {
+            $model = $this->cellsModel;    
+        } else {
+            $model = $this->model;
+        }
 
         if ($model instanceof Model) {
             return $model::class;
@@ -51,10 +69,12 @@ trait InteractsWithRecords
     public function getRecord(): ?Model
     {
         $record = $this->record;
+        //dd($record);
 
         if ($record instanceof Model) {
             return $record;
         }
+
 
         if (is_string($record)) {
             return null;

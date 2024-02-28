@@ -23,12 +23,20 @@ class ViewAction extends BaseViewAction
             fn (FullCalendarWidget $livewire) => $livewire->getFormSchema()
         );
 
-        $this->modalFooterActions(
-            fn (ViewAction $action, FullCalendarWidget $livewire) => [
-                ...$livewire->getCachedModalActions(),
-                $action->getModalCancelAction(),
-            ]
-        );
+        $actions = function(ViewAction $action, FullCalendarWidget $livewire) {
+            $result = [];
+            
+            foreach ($livewire->getCachedModalActions() as $a) {
+                if ($a->name != 'cell') {
+                    $result[] = $a;
+                }
+            }
+            $result[] = $action->getModalCancelAction();
+
+            return $result;
+        };
+
+        $this->modalFooterActions($actions);
 
         $this->after(
             fn (FullCalendarWidget $livewire) => $livewire->refreshRecords()

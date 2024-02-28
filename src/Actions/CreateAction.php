@@ -11,6 +11,9 @@ class CreateAction extends BaseCreateAction
     {
         parent::setUp();
 
+        $this->label('Добавить событие');
+
+
         $this->model(
             fn (FullCalendarWidget $livewire) => $livewire->getModel()
         );

@@ -27,7 +27,7 @@ export default function fullcalendar({
 }) {
     return {
         init() {
-
+            console.log("Init");
             let cellsData;
             let htmlTemplate;
 
@@ -45,7 +45,7 @@ export default function fullcalendar({
                 editable,
                 selectable,
                 ...config,
-                locales,                
+                locales,                  
                 events: (info, successCallback, failureCallback) => {
                     this.$wire.fetchEvents({ start: info.startStr, end: info.endStr, timezone: info.timeZone })
                         .then(successCallback)
@@ -53,12 +53,14 @@ export default function fullcalendar({
 
                         this.$wire.getCellTemplate()
                         .then((data) => {
+                            //console.log("HTML LOAD",data);
                             htmlTemplate = data;                            
                         })
                         .catch(failureCallback)
 
                         this.$wire.fetchCellsData({ start: info.startStr, end: info.endStr, timezone: info.timeZone })
                         .then((data) => {
+                            //console.log("DATA LOAD",data);
                             cellsData = data;
                             calendar.render()
                         })
@@ -71,6 +73,7 @@ export default function fullcalendar({
                 eventClick: ({ event, jsEvent }) => {
                     jsEvent.preventDefault()
 
+                    console.log(event, jsEvent);
                     if (event.url) {
                         const isNotPlainLeftClick = e => (e.which > 1) || (e.altKey) || (e.ctrlKey) || (e.metaKey) || (e.shiftKey)
                         return window.open(event.url, (event.extendedProps.shouldOpenUrlInNewTab || isNotPlainLeftClick(jsEvent)) ? '_blank' : '_self')
@@ -92,13 +95,22 @@ export default function fullcalendar({
                         revert()
                     }
                 },
-                dateClick: ({ dateStr, allDay, view, resource }) => {
-                    if (!selectable) return;
-                    this.$wire.onDateSelect(dateStr, null, allDay, view, resource)
+                dateClick: ( info ) => {
+
+                    let id = (info.date.getMonth()+1) + 
+                    "_" + info.date.getDate();
+
+                    if ((cellsData != undefined) && 
+                        (cellsData[id] != undefined))
+                    {
+                        console.log("NODATA",cellsData[id]);
+                    }
+
+                    this.$wire.onDateClick(cellsData[id].id, info)
                 },
                 select: ({ startStr, endStr, allDay, view, resource }) => {
                     if (!selectable) return;
-                    this.$wire.onDateSelect(startStr, endStr, allDay, view, resource)
+                    //this.$wire.onDateSelect(startStr, endStr, allDay, view, resource)
                 },
                 dayCellContent: (dayData) => { 
 

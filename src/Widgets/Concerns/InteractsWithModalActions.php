@@ -6,6 +6,7 @@ use Closure;
 use Filament\Actions\Action;
 use Filament\Actions\ActionGroup;
 use InvalidArgumentException;
+use Saade\FilamentFullCalendar\Actions\CelleditAction;
 
 trait InteractsWithModalActions
 {
@@ -27,6 +28,8 @@ trait InteractsWithModalActions
             fn (): array => $this->modalActions(),
         );
 
+        //
+
         foreach ($actions as $action) {
             if ($action instanceof ActionGroup) {
                 $action->livewire($this);
@@ -45,7 +48,7 @@ trait InteractsWithModalActions
             }
 
             $this->cacheAction($action);
-            $this->cachedModalActions[] = $action;
+            $this->cachedModalActions[] = $action;            
         }
     }
 

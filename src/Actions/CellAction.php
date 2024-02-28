@@ -2,14 +2,21 @@
 
 namespace Saade\FilamentFullCalendar\Actions;
 
-use Filament\Actions\EditAction as BaseEditAction;
+use Filament\Actions\ViewAction as BaseViewAction;
 use Saade\FilamentFullCalendar\Widgets\FullCalendarWidget;
 
-class EditAction extends BaseEditAction
+class CellAction extends BaseViewAction
 {
     protected function setUp(): void
     {
         parent::setUp();
+
+        $this->label('Cell');
+        $this->name('cell');
+
+        $this->modalHeading(
+            fn (FullCalendarWidget $livewire) => $livewire->getCellFromHeader()
+        );
 
         $this->model(
             fn (FullCalendarWidget $livewire) => $livewire->getModel()
@@ -20,7 +27,7 @@ class EditAction extends BaseEditAction
         );
        
         $this->form(
-            fn (FullCalendarWidget $livewire) => $livewire->getFormSchema()
+            fn (FullCalendarWidget $livewire) => $livewire->getCellEditFormSchema()
         );
 
         $this->after(
@@ -28,5 +35,7 @@ class EditAction extends BaseEditAction
         );
 
         $this->cancelParentActions();
+
+
     }
 }

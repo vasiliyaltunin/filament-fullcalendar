@@ -8,6 +8,7 @@ use Filament\Actions\Contracts\HasActions;
 use Filament\Forms\Concerns\InteractsWithForms;
 use Filament\Forms\Contracts\HasForms;
 use Filament\Widgets\Widget;
+use Illuminate\Database\Eloquent\Model;
 use Saade\FilamentFullCalendar\Actions;
 
 class FullCalendarWidget extends Widget implements HasForms, HasActions
@@ -23,6 +24,14 @@ class FullCalendarWidget extends Widget implements HasForms, HasActions
 
     protected int | string | array $columnSpan = 'full';
 
+    public Model | string | null $cellsModel = null;
+
+    public string $cellFormHeader = '';
+
+    public function getCellFromHeader(): string {
+        return $this->cellFormHeader;
+    }
+
     protected function headerActions(): array
     {
         return [
@@ -35,6 +44,7 @@ class FullCalendarWidget extends Widget implements HasForms, HasActions
         return [
             Actions\EditAction::make(),
             Actions\DeleteAction::make(),
+            Actions\CellAction::make(),
         ];
     }
 
@@ -58,6 +68,11 @@ class FullCalendarWidget extends Widget implements HasForms, HasActions
         return [];
     }
 
+    public function getCellEditFormSchema(): array
+    {
+        return [];
+    }
+
     public function fetchCellsData(array $info): array {
         return [];
     }
@@ -65,5 +80,7 @@ class FullCalendarWidget extends Widget implements HasForms, HasActions
     public function getCellTemplate(): string {
         return "";
     }
+
+
 
 }
